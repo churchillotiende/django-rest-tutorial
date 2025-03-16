@@ -2,5 +2,6 @@ import requests
 
 endpoint = "http://localhost:8000/api"
 
-response = requests.get(endpoint)
-print(response.text)
+get_response = requests.post(endpoint,json = {"content":"Yoooooh"})
+
+print(get_response.text)
