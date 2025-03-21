@@ -6,13 +6,10 @@ from products.serializers import ProductSerializer
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 
-@api_view(["POST"])
+@api_view(["GET"])
 def api_home(request,*args,**kwargs):
     """
     DRF API View
     """
-    serializer = ProductSerializer(data = request.data)
-    if serializer.is_valid():
-        print(serializer.data)
-        return Response(serializer.data)
-    return Response({"invalid":"Not good data"})
+    products = Product.objects.all().order_by("?").first()
+    return JsonResponse(products)
