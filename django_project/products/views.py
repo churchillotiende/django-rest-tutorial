@@ -1,18 +1,42 @@
-from rest_framework import generics
+from rest_framework import generics,mixins
 
 from .models import Product
 from .serializers import ProductSerializer
 
-class ProductListView(generics.ListCreateAPIView):
-  """
-   List all products, or create a new one.
-  """
-  model = Product
-  queryset = Product.objects.all()
+# class ProductListView(generics.ListCreateAPIView):
+#   """
+#    List all products, or create a new one.
+#   """
+#   model = Product
+#   queryset = Product.objects.all()
+#
+#   serializer_class = ProductSerializer
+#
+# product_list_view = ProductListView.as_view()
 
-  serializer_class = ProductSerializer
+class ProductMixinView(
+        mixins.ListModelMixin,
+        mixins.RetrieveModelMixin,
+        mixins.CreateModelMixin,
+        generics.GenericAPIView
+        ):
 
-product_list_view = ProductListView.as_view()
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
+    lookup_field = 'pk'
+
+    def get(self, request,*args,**kwargs):
+
+        pk = kwargs.get("pk")
+
+        if(pk is Not None):
+            return self.retrieve(request,*args,**kwargs)
+        print(args,kwargs)
+        return self.list(request,*args,**kwargs)
+    def post(self,request,*args,**kwargs):
+        return self.create(self,*args,**kwargs)
+
+product_mixin_view = ProductMixinView.as_view()
 
 class ProductDetailAPIView(generics.RetrieveAPIView):
     lookup_field = "pk"
