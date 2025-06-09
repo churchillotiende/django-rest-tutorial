@@ -29,7 +29,7 @@ class ProductMixinView(
 
         pk = kwargs.get("pk")
 
-        if(pk is Not None):
+        if pk is not None:
             return self.retrieve(request,*args,**kwargs)
         print(args,kwargs)
         return self.list(request,*args,**kwargs)
